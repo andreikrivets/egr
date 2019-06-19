@@ -30,10 +30,10 @@ function request(arr) {
                     let R = JSON.parse(text);
                     let date;
                     console.log(R);
-                    if (R.ROW.DD == null) {
+                    if (R.ROW.DLIKV == null) {
                         date = '-';
                     } else {
-                        date = R.ROW.DD;
+                        date = R.ROW.DLIKV;
                     }
                     constructor('tr', `tr-content${c}`, '.result-table', '', 0);
                     constructor('td', 'td-content', `.tr-content${c}`, `${R.ROW.VUNP}`, 0);
