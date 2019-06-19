@@ -21,3 +21,8 @@ tr, td {
 tr:nth-child(2n) {
     background: lightcyan;
 }
+
+.spa {
+    display: inline-flex;
+    align-items: center;
+}

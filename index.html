@@ -12,8 +12,13 @@
 
 <body>
     <div class='container'>
-        <textarea type="text" class='input-area' placeholder="регистрационный номер" cols="50" rows="20"></textarea>
-        <input type="button" value="поехали" onclick="parse()">
+            <textarea type="text" class='input-area' placeholder="регистрационный номер" cols="50" rows="20"></textarea>
+            <input type="button" value="поехали" onclick="parse()">
+            <select class='select-src'>
+                <option value="1">ЕГР</option>
+                <option value="2">МНС</option>
+            </select>
+            <span class='spa'><input type="checkbox" value='3' class='chb'> <p class='sp'>прокси</p></span>
     </div>
 </body>
 

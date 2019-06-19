@@ -4,15 +4,28 @@
     }
     const NMtext = document.querySelector('.input-area').value;
     const Match = NMtext.match(/[0-9]{9}/g);
+    st = document.querySelector('.select-src').value;
+    chb = document.querySelector('.chb').checked;
     request(Match);
 }
-
+let st;
+let chb;
 let c = 1;
 let R;
+let _R = {};
+let url, n, type;
+let fullUrl;
 function request(arr) {
-    const url = 'www.portal.nalog.gov.by/grp/getData?';
-    const type = '&charset=UTF-8&type=json';
-    const cors = 'https://cors-anywhere.herokuapp.com/';
+    if (st == 2) {
+        url = 'https://www.portal.nalog.gov.by/grp/getData?';
+        n = 'unp=';
+        type = '&charset=UTF-8&type=json';
+    } else if (st == 1) {
+        url = 'http://egr.gov.by/egrn/API.jsp?';
+        n = 'NM=';
+        type = '';
+    }
+
     constructor('table', 'result-table', '.container', '', 0);
     constructor('tr', 'tr-header', '.result-table', '', 0);
     constructor('td', 'td-header', '.tr-header', '<p>элемент</p>', 0);
@@ -21,29 +34,58 @@ function request(arr) {
     constructor('td', 'td-header', '.tr-header', '<p>дата регистрации</p>', 0);
     constructor('td', 'td-header', '.tr-header', '<p>дата исключения</p>', 0);
     arr.forEach((e) => {
-        const fullUrl = cors + url + 'unp=' + e + type;
+        if (chb) {
+            fullUrl = 'https://cors-anywhere.herokuapp.com/' + url.slice(8, url.length) + n + e + type;
+        } else {
+            fullUrl = url + n + e + type;
+        }
         console.log(fullUrl);
-        fetch(fullUrl, { mode: 'cors', headers: {
-            'Access-Control-Allow-Origin':'https://www.portal.nalog.gov.by/'
-        } }).then((resp) => {
+        fetch(fullUrl, { mode: 'cors'}).then((resp) => {
             return resp.text();
         })
             .then((text) => {
-                if (text.slice(0, 10) != '<!DOCTYPE ') {
-                    let R = JSON.parse(text);
-                    let date;
-
-                    if (R.ROW.DLIKV == null) {
-                        date = '-';
-                    } else {
-                        date = R.ROW.DLIKV;
+                if (text && text.slice(0, 10) != '<!DOCTYPE ') {
+                    if (text == 'Not found because of proxy error: Error: unable to verify the first certificate') {
+                        alert ('proxy error');
                     }
+                    let R = JSON.parse(text);
+                    console.log(R);
+                    if (st == 1) {
+                        _R = {
+                            num: R[0].NM,
+                            name: R[0].VSN,
+                            ac: R[0].VS,
+                            d_r: R[0].DC,
+                            d_i: R[0].DD,
+                        }
+                        if (_R.d_i == null) {
+                            _R.d_i = '-';
+                        } else {
+                            _R.d_i = R.ROW.DLIKV;
+                        }
+                    } else {
+                        _R = {
+                            num: R.ROW.VUNP,
+                            name: R.ROW.VNAIMK,
+                            ac: R.ROW.VKODS,
+                            d_r: R.ROW.DREG,
+                            d_i: R.ROW.DLIKV,
+                        }
+
+                        if (_R.d_i == null) {
+                            _R.d_i = '-';
+                        } else {
+                            _R.d_i = R.ROW.DLIKV;
+                        }
+                    }
+
+
                     constructor('tr', `tr-content${c}`, '.result-table', '', 0);
-                    constructor('td', 'td-content', `.tr-content${c}`, `${R.ROW.VUNP}`, 0);
-                    constructor('td', 'td-content', `.tr-content${c}`, `${R.ROW.VNAIMK}`, 0);
-                    constructor('td', 'td-content', `.tr-content${c}`, `${R.ROW.VKODS}`, 0);
-                    constructor('td', 'td-content', `.tr-content${c}`, `${R.ROW.DREG}`, 0);
-                    constructor('td', 'td-content', `.tr-content${c}`, `${date}`, 0);
+                    constructor('td', 'td-content', `.tr-content${c}`, `${_R.num}`, 0);
+                    constructor('td', 'td-content', `.tr-content${c}`, `${_R.name}`, 0);
+                    constructor('td', 'td-content', `.tr-content${c}`, `${_R.ac}`, 0);
+                    constructor('td', 'td-content', `.tr-content${c}`, `${_R.d_r}`, 0);
+                    constructor('td', 'td-content', `.tr-content${c}`, `${_R.d_i}`, 0);
                     c++;
                 }
                 else {
