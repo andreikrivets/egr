@@ -10,8 +10,9 @@
 let c = 1;
 let R;
 function request(arr) {
-    const url = 'https://www.portal.nalog.gov.by/grp/getData?';
-    const type = '&charset=UTF-8&type=json'
+    const url = 'www.portal.nalog.gov.by/grp/getData?';
+    const type = '&charset=UTF-8&type=json';
+    const cors = 'https://cors-anywhere.herokuapp.com/';
     constructor('table', 'result-table', '.container', '', 0);
     constructor('tr', 'tr-header', '.result-table', '', 0);
     constructor('td', 'td-header', '.tr-header', '<p>элемент</p>', 0);
@@ -20,16 +21,18 @@ function request(arr) {
     constructor('td', 'td-header', '.tr-header', '<p>дата регистрации</p>', 0);
     constructor('td', 'td-header', '.tr-header', '<p>дата исключения</p>', 0);
     arr.forEach((e) => {
-        const fullUrl = url + 'unp=' + e + type;
+        const fullUrl = cors + url + 'unp=' + e + type;
         console.log(fullUrl);
-        fetch(fullUrl, { mode: 'cors' }).then((resp) => {
+        fetch(fullUrl, { mode: 'cors', headers: {
+            'Access-Control-Allow-Origin':'https://www.portal.nalog.gov.by/'
+        } }).then((resp) => {
             return resp.text();
         })
             .then((text) => {
                 if (text.slice(0, 10) != '<!DOCTYPE ') {
                     let R = JSON.parse(text);
                     let date;
-                    console.log(R);
+
                     if (R.ROW.DLIKV == null) {
                         date = '-';
                     } else {
