@@ -26,7 +26,7 @@ function request(arr) {
             return resp.text();
         })
             .then((text) => {
-                if (text) {
+                if (text.slice(0, 10) != '<!DOCTYPE ') {
                     let R = JSON.parse(text);
                     let date;
                     console.log(R);
