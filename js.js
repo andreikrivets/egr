@@ -35,7 +35,12 @@ function request(arr) {
     constructor('td', 'td-header', '.tr-header', '<p>дата исключения</p>', 0);
     arr.forEach((e) => {
         if (chb) {
-            fullUrl = 'https://cors-anywhere.herokuapp.com/' + url.slice(8, url.length) + n + e + type;
+            if (st == 2) {
+                fullUrl = 'https://cors-anywhere.herokuapp.com/' + url.slice(8, url.length) + n + e + type;
+            } else if (st == 1) {
+                fullUrl = 'https://cors-anywhere.herokuapp.com/' + url + n + e + type;
+            }
+            
         } else {
             fullUrl = url + n + e + type;
         }
