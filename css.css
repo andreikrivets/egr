@@ -14,3 +14,10 @@ tr, td {
     text-align: center;
     /* width: 100%; */
 }
+.tr-header {
+    font-weight: bold;
+}
+
+tr:nth-child(2n) {
+    background: lightcyan;
+}
